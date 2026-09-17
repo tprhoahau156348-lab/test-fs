@@ -68,24 +68,6 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-
-app.get('/api/me', authenticateToken, async (req, res) => {
-  const users = await getUsers();
-  const user = users.find(u => u.id === req.user.id);
-  
-  if (!user) return res.status(404).json({ error: 'User not found' });
-  
-  const { password, ...userWithoutPassword } = user;
-  res.json(userWithoutPassword);
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
-
-
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   
@@ -102,3 +84,19 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+
+
+app.get('/api/me', authenticateToken, async (req, res) => {
+  const users = await getUsers();
+  const user = users.find(u => u.id === req.user.id);
+  
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  
+  const { password, ...userWithoutPassword } = user;
+  res.json(userWithoutPassword);
+});
+
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
